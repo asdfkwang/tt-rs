@@ -15,7 +15,15 @@ git clone git@github.com:asdfkwang/tt-kmd.git $TT_RS_HOME
 ### debian rootfs (riscv64, prebuilt)
 https://cdimage.debian.org/cdimage/cloud/trixie/latest/debian-13-nocloud-riscv64.tar.xz
 
-### run (from $TT_RS_HOME, SD root, no initramfs)
+### run: kernel + busybox (driver test loop, no SD needed)
+./qemu/build/qemu-system-riscv64 -M tt-atlantis \
+  -kernel linux-build-rv64/arch/riscv/boot/Image \
+  -initrd initramfs-mini/mini.cpio \
+  -nographic -m 2G -no-reboot \
+  -device ttsim,lib=sim/libttsim_bh.so \
+  -append "console=ttyS0 earlycon root=/dev/ram rdinit=/init"
+
+### run: full Debian (SD root, milestone only)
 ./qemu/build/qemu-system-riscv64 -M tt-atlantis \
   -kernel linux-build-rv64/arch/riscv/boot/Image \
   -nographic -m 8G \
